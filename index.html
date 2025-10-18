@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lrows | Official Site</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --accent: #1db954;
+      --card: #f3f3f3;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0d0d0d;
+      --text: #f3f3f3;
+      --card: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.4s ease, color 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .links a img {
+      width: 40px;
+      height: 40px;
+      transition: transform 0.2s ease, opacity 0.3s;
+    }
+
+    .links a img:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+
+    .contact {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--text);
+      transition: color 0.3s ease;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: background 0.4s ease;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Tema değiştir">🌙</button>
+
+  <div class="card">
+    <h1>Lrows</h1>
+    <p>Official Artist Page</p>
+
+    <div class="links">
+      <a href="https://open.spotify.com/intl-tr/artist/1NfX2XchoIb9VqZPjMxoz9" target="_blank" title="Spotify">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/spotify.svg" alt="Spotify" />
+      </a>
+      <a href="https://music.apple.com/tr/artist/lrows/1631553986" target="_blank" title="Apple Music">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applemusic.svg" alt="Apple Music" />
+      </a>
+      <a href="https://youtube.com/@lrowsxd" target="_blank" title="YouTube">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" />
+      </a>
+    </div>
+
+    <div class="contact">
+      📩 <a href="mailto:info@lrows.dev" style="color: var(--text); text-decoration: none;">info@lrows.dev</a>
+    </div>
+  </div>
+
+  <footer>© 2025 Lrows. All rights reserved.</footer>
+
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggleBtn.textContent = '☀️';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        toggleBtn.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggleBtn.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
+</body>
+</html>

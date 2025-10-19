@@ -1,177 +1,398 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lrows | Official</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LROWS — Official</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --bg: #0d0d12;
-      --text: #f5f5f5;
-      --accent: linear-gradient(90deg, #6a00ff, #00e0ff);
-      --card: rgba(255, 255, 255, 0.05);
-      --shadow: rgba(0, 0, 0, 0.4);
+    :root{
+      --bg:#07060a;
+      --panel: rgba(255,255,255,0.04);
+      --text:#f6f6f8;
+      --muted: rgba(246,246,248,0.7);
+      --accent-a: #7b3dff;
+      --accent-b: #00d6ff;
+      --glass-blur: 10px;
+      --card-radius: 16px;
     }
-    [data-theme="light"] {
-      --bg: #ffffff;
-      --text: #111111;
-      --card: rgba(0, 0, 0, 0.05);
-      --shadow: rgba(0, 0, 0, 0.1);
-      --accent: linear-gradient(90deg, #7e57c2, #03a9f4);
+    [data-theme="light"]{
+      --bg:#f6f7fb;
+      --panel: rgba(10,10,12,0.05);
+      --text:#0b0b0b;
+      --muted: rgba(11,11,11,0.65);
+      --accent-a:#6f42c1;
+      --accent-b:#0288d1;
+      --glass-blur: 8px;
     }
-    * {
-      box-sizing: border-box;
-      transition: all 0.3s ease;
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      overflow:hidden;
     }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-      text-align: center;
+
+    /* Canvas bg layer */
+    #bgCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
     }
-    h1 {
-      font-size: 3.5rem;
-      background: var(--accent);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 6s ease-in-out infinite alternate;
+
+    .container{
+      position:relative;
+      z-index:2;
+      width:min(980px,95vw);
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      align-items:center;
     }
-    @keyframes glow {
-      from { filter: drop-shadow(0 0 10px #6a00ff); }
-      to { filter: drop-shadow(0 0 25px #00e0ff); }
+
+    /* Card */
+    .hero{
+      width:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter: blur(var(--glass-blur));
+      border-radius:var(--card-radius);
+      padding:36px 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.02);
     }
-    .subtitle {
-      opacity: 0.8;
-      letter-spacing: 1px;
-      margin-top: -10px;
+
+    /* Title / entrance */
+    .title {
+      font-weight:700;
+      letter-spacing:6px;
+      font-size:48px;
+      margin:0;
+      line-height:1;
+      display:inline-block;
+      background: linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
+      opacity:0;
+      transform: translateY(8px) scale(0.995);
+      animation: titleIn .9s cubic-bezier(.2,.9,.3,1) forwards;
     }
-    .links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 2rem 0;
-      flex-wrap: wrap;
+    @keyframes titleIn{
+      to{opacity:1; transform:none}
     }
-    .links a {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 0.8rem 1.5rem;
-      text-decoration: none;
-      color: var(--text);
-      box-shadow: 0 4px 15px var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 600;
+    .subtitle{
+      margin:8px 0 0 0;
+      font-weight:400;
+      color:var(--muted);
+      opacity:0;
+      transform: translateY(6px);
+      animation: subIn .9s .12s cubic-bezier(.2,.9,.3,1) forwards;
     }
-    .links a:hover {
-      transform: scale(1.05);
-      background: var(--accent);
-      color: #fff;
+    @keyframes subIn{
+      to{opacity:1; transform:none}
     }
-    .links img {
-      width: 24px;
-      height: 24px;
+
+    /* Links */
+    .links{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      margin-top:18px;
+      flex-wrap:wrap;
     }
-    .section {
-      margin-top: 2rem;
-      background: var(--card);
-      padding: 2rem;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 6px 25px var(--shadow);
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:600;
+      text-decoration:none;
+      color:var(--text);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      position:relative;
+      overflow:hidden;
     }
-    .coming {
-      font-style: italic;
-      opacity: 0.7;
+    .btn img{width:20px;height:20px;display:block}
+
+    /* hover "spot" effect */
+    .btn::after{
+      content:'';
+      position:absolute;
+      left:50%; top:50%;
+      width:0; height:0;
+      transform:translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(255,255,255,0.12), rgba(255,255,255,0));
+      opacity:0;
+      transition: width .35s ease, height .35s ease, opacity .25s ease;
+      pointer-events:none;
     }
-    .contact {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
+    .btn:hover{
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+      background: linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      color:#fff;
     }
-    footer {
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      opacity: 0.6;
+    .btn:hover::after{
+      width:180%; height:180%; opacity:1;
     }
-    .theme-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--text);
-      cursor: pointer;
-      z-index: 10;
+
+    /* Latest Release card */
+    .release{
+      margin-top:18px;
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.02);
+      max-width:720px;
     }
-    @media (max-width: 500px) {
-      h1 { font-size: 2.5rem; }
-      .links a { font-size: 0.9rem; }
+    .art{
+      width:96px; height:96px; border-radius:10px;
+      background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; color:rgba(255,255,255,0.95);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+      flex-shrink:0;
+    }
+    .release .meta{ text-align:left; }
+    .release h3{ margin:0; font-size:18px; letter-spacing:0.6px }
+    .release p{ margin:6px 0 0 0; color:var(--muted); font-size:14px }
+
+    /* Contact / footer */
+    .contact{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    footer{
+      margin-top:14px;
+      font-size:13px;
+      color:var(--muted);
+      opacity:0.9;
+    }
+
+    /* theme toggle */
+    .themeToggle{
+      position:fixed;
+      right:18px; top:18px;
+      z-index:3;
+      background:transparent;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      backdrop-filter: blur(6px);
+      box-shadow:0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    /* responsive */
+    @media (max-width:640px){
+      .title{font-size:34px; letter-spacing:4px}
+      .release{flex-direction:column; padding:14px}
+      .art{width:84px;height:84px}
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">🌙</button>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-  <h1>LROWS</h1>
-  <p class="subtitle">Official Artist Page</p>
+  <button class="themeToggle" id="themeBtn" aria-label="Tema değiştir">🌙</button>
 
-  <div class="links">
-    <a href="https://open.spotify.com/intl-tr/artist/1NfX2XchoIb9VqZPjMxoz9" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/spotify.svg" alt="Spotify" />
-      Spotify
-    </a>
-    <a href="https://music.apple.com/tr/artist/lrows/1631553986" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applemusic.svg" alt="Apple Music" />
-      Apple Music
-    </a>
-    <a href="https://youtube.com/@lrowsxd" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" />
-      YouTube
-    </a>
-  </div>
+  <main class="container" role="main">
+    <section class="hero" aria-labelledby="name">
+      <h1 id="name" class="title">LROWS</h1>
+      <p class="subtitle">Official Artist Page</p>
 
-  <div class="section">
-    <h2>🎵 Latest Release</h2>
-    <p class="coming">Coming soon...</p>
-  </div>
+      <nav class="links" aria-label="Müzik platformları">
+        <a class="btn" href="https://open.spotify.com/intl-tr/artist/1NfX2XchoIb9VqZPjMxoz9" target="_blank" rel="noopener noreferrer" title="Spotify">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/spotify.svg" alt="" aria-hidden="true">
+          Spotify
+        </a>
 
-  <div class="contact">
-    📩 <a href="mailto:lrows@hotmail.com" style="color:inherit;">lrows@hotmail.com</a>
-  </div>
+        <a class="btn" href="https://music.apple.com/tr/artist/lrows/1631553986" target="_blank" rel="noopener noreferrer" title="Apple Music">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applemusic.svg" alt="" aria-hidden="true">
+          Apple Music
+        </a>
 
-  <footer>© 2025 Lrows. All rights reserved.</footer>
+        <a class="btn" href="https://youtube.com/@lrowsxd" target="_blank" rel="noopener noreferrer" title="YouTube">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="" aria-hidden="true">
+          YouTube
+        </a>
+      </nav>
 
+      <div class="release" aria-labelledby="latest">
+        <div class="art" id="artPlaceholder">L</div>
+        <div class="meta">
+          <h3 id="latest">🎵 Latest Release</h3>
+          <p id="releaseText">Coming soon... — buraya şarkı adı, kapak ve dinleme linkleri eklenecek.</p>
+        </div>
+      </div>
+
+      <div class="contact">📩 <a href="mailto:lrows@hotmail.com" style="color:inherit; text-decoration:underline;">lrows@hotmail.com</a></div>
+    </section>
+
+    <footer>© <span id="year"></span> Lrows. All rights reserved.</footer>
+  </main>
+
+  <!-- Script: theme + canvas particles + small accessibility tweaks -->
   <script>
-    const btn = document.getElementById('themeToggle');
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    btn.textContent = saved === 'light' ? '🌙' : '☀️';
+    // THEME: respects saved preference or system
+    const themeBtn = document.getElementById('themeBtn');
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme === 'light') document.documentElement.setAttribute('data-theme','light');
+    else if (!savedTheme && !prefersDark) document.documentElement.setAttribute('data-theme','light');
 
-    btn.addEventListener('click', () => {
+    // Button icon
+    const updateBtnIcon = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      themeBtn.textContent = isLight ? '🌙' : '☀️';
+    };
+    updateBtnIcon();
+
+    themeBtn.addEventListener('click', () => {
       if (document.documentElement.getAttribute('data-theme') === 'light') {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme','dark');
-        btn.textContent = '☀️';
       } else {
         document.documentElement.setAttribute('data-theme','light');
         localStorage.setItem('theme','light');
-        btn.textContent = '🌙';
       }
+      updateBtnIcon();
     });
+
+    /* PARTICLES CANVAS */
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = innerWidth;
+      let H = canvas.height = innerHeight;
+      let particles = [];
+      const DPR = window.devicePixelRatio || 1;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.scale(DPR, DPR);
+
+      const colorsDark = ['rgba(123,61,255,0.14)','rgba(0,214,255,0.12)','rgba(255,255,255,0.06)'];
+      const colorsLight = ['rgba(111,66,193,0.12)','rgba(2,136,209,0.10)','rgba(20,20,20,0.03)'];
+
+      function makeParticles(){
+        particles = [];
+        const count = Math.round((W*H) / 90000); // density
+        for(let i=0;i<count;i++){
+          particles.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: 1 + Math.random()*3,
+            vx: (Math.random()-0.5)*0.25,
+            vy: (Math.random()-0.5)*0.25,
+            alpha: 0.04 + Math.random()*0.12,
+            colorIdx: Math.floor(Math.random()*3)
+          });
+        }
+      }
+      makeParticles();
+
+      // small drifting motion + faint pulsing
+      let t = 0;
+      function draw(){
+        t += 0.006;
+        // background clear: very subtle gradient overlay
+        ctx.clearRect(0,0,W,H);
+        // optional gentle gradient overlay
+        const grd = ctx.createLinearGradient(0,0,W,H);
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight){
+          grd.addColorStop(0,'rgba(255,255,255,0.02)');
+          grd.addColorStop(1,'rgba(240,248,255,0.02)');
+        } else {
+          grd.addColorStop(0,'rgba(6,6,10,0.06)');
+          grd.addColorStop(1,'rgba(10,6,20,0.06)');
+        }
+        ctx.fillStyle = grd;
+        ctx.fillRect(0,0,W,H);
+
+        const colors = isLight ? colorsLight : colorsDark;
+
+        for(let p of particles){
+          // float
+          p.x += p.vx + Math.sin(t + p.x*0.0005)*0.12;
+          p.y += p.vy + Math.cos(t + p.y*0.0006)*0.08;
+
+          // wrap around
+          if (p.x < -10) p.x = W+10;
+          if (p.x > W+10) p.x = -10;
+          if (p.y < -10) p.y = H+10;
+          if (p.y > H+10) p.y = -10;
+
+          // draw glow
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*8);
+          grad.addColorStop(0, colors[p.colorIdx].replace('0.',''+(p.alpha)));
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.beginPath();
+          ctx.fillStyle = grad;
+          ctx.arc(p.x, p.y, p.r*6, 0, Math.PI*2);
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      // responsive
+      let resizeTimeout;
+      window.addEventListener('resize', ()=>{
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(()=>{
+          W = canvas.width = innerWidth;
+          H = canvas.height = innerHeight;
+          canvas.width = W * DPR; canvas.height = H * DPR;
+          canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+          ctx.scale(DPR, DPR);
+          makeParticles();
+        }, 120);
+      });
+
+      // react to theme changes (when toggled) to update color palette
+      const obs = new MutationObserver(()=>{ /* nothing: draw uses current theme */ });
+      obs.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+
+    })();
+
+    // small accessibility: reduce motion respect
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      document.querySelectorAll('*').forEach(n => n.style.animation = 'none');
+      const canvas = document.getElementById('bgCanvas');
+      canvas.style.display = 'none';
+    }
   </script>
 </body>
 </html>

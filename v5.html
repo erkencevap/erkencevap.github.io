@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LROWS — Official</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------
+       Theme tokens
+       ------------------------- */
+    :root{
+      --bg-1: #0b0710;   /* dark deep */
+      --bg-2: #0f0920;
+      --text: #f6f6f8;
+      --muted: rgba(246,246,248,0.7);
+      --glass: rgba(255,255,255,0.04);
+      --card-radius: 16px;
+      --neon-a: #8b5cff; /* purple */
+      --neon-b: #00e0ff; /* cyan */
+      --accentGlow: 0 8px 40px rgba(139,92,255,0.12);
+    }
+
+    [data-theme="light"]{
+      --bg-1: #faf7ff;
+      --bg-2: #f5f8ff;
+      --text: #0b0b0b;
+      --muted: rgba(11,11,11,0.65);
+      --glass: rgba(11,11,11,0.03);
+      --neon-a: #7e57c2;
+      --neon-b: #03a9f4;
+      --accentGlow: 0 8px 30px rgba(126,87,194,0.08);
+    }
+
+    /* -------------------------
+       Base
+       ------------------------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      color:var(--text);
+      background:linear-gradient(120deg,var(--bg-1),var(--bg-2));
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      overflow:auto;
+    }
+
+    /* animated background layers (subtle, css only) */
+    .bg {
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .bg::before, .bg::after{
+      content:"";
+      position:absolute;
+      inset:-10%;
+      background: radial-gradient(ellipse at 10% 20%, rgba(139,92,255,0.18), transparent 12%),
+                  radial-gradient(ellipse at 90% 80%, rgba(0,224,255,0.12), transparent 12%);
+      filter: blur(40px);
+      transform: scale(1);
+      animation: bgFloat 14s ease-in-out infinite;
+      mix-blend-mode: screen;
+      opacity:0.95;
+    }
+    .bg::after{
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,120,200,0.08), transparent 10%),
+                  radial-gradient(ellipse at 30% 70%, rgba(139,92,255,0.06), transparent 10%);
+      animation-duration: 18s;
+      animation-direction: reverse;
+    }
+    @keyframes bgFloat{
+      0%{transform: translateY(0) scale(1)}
+      50%{transform: translateY(-6%) scale(1.03)}
+      100%{transform: translateY(0) scale(1)}
+    }
+
+    /* content wrapper */
+    .wrap{
+      position:relative;
+      z-index:2;
+      width:min(980px,94vw);
+      margin:auto;
+      text-align:center;
+    }
+
+    /* glass hero */
+    .hero{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: var(--card-radius);
+      padding:36px;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: var(--accentGlow);
+      backdrop-filter: blur(8px);
+      display:flex;
+      gap:26px;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+    }
+
+    /* title - neon breathing + entrance */
+    .logo {
+      font-weight:700;
+      letter-spacing:8px;
+      font-size:56px;
+      margin:0;
+      line-height:1;
+      display:inline-block;
+      background: linear-gradient(90deg,var(--neon-a),var(--neon-b));
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transform-origin:center;
+      animation: breathe 3.8s ease-in-out infinite;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6));
+    }
+    @keyframes breathe{
+      0%{transform:scale(1); opacity:0.95; filter:drop-shadow(0 6px 20px rgba(139,92,255,0.10))}
+      50%{transform:scale(1.03); opacity:1; filter:drop-shadow(0 14px 40px rgba(0,224,255,0.14))}
+      100%{transform:scale(1); opacity:0.95}
+    }
+
+    .tag {
+      margin-top:8px;
+      color:var(--muted);
+      font-weight:500;
+      letter-spacing:1px;
+    }
+
+    /* buttons row */
+    .links{
+      display:flex;
+      gap:14px;
+      margin-top:18px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    /* neon bordered button with animated border */
+    .link-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      border-radius:12px;
+      font-weight:700;
+      text-decoration:none;
+      color:var(--text);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+      position:relative;
+      overflow:hidden;
+      transition: transform .18s ease, color .18s ease, box-shadow .18s ease;
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    .link-btn img{width:20px;height:20px;display:block}
+
+    /* animated gradient border */
+    .link-btn::before{
+      content:'';
+      position:absolute;
+      inset:-2px;
+      background:linear-gradient(90deg,var(--neon-a),var(--neon-b),#ff7ab8);
+      z-index:-1;
+      filter: blur(12px);
+      opacity:0;
+      transition: opacity .25s ease, transform .4s ease;
+      transform: scale(0.98);
+      pointer-events:none;
+    }
+    .link-btn:hover{
+      transform: translateY(-6px) scale(1.02);
+      color: #fff;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.45);
+    }
+    .link-btn:hover::before{ opacity:1; transform: scale(1.02) }
+
+    /* subtle inner shine */
+    .link-btn::after{
+      content:'';
+      position:absolute;
+      left:-40%;
+      top:0;
+      width:40%;
+      height:100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
+      transform: skewX(-18deg);
+      transition: left .5s ease;
+    }
+    .link-btn:hover::after{ left:120% }
+
+    /* Latest release card */
+    .release {
+      margin-top:18px;
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      border-radius:12px;
+      border: 1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+      width:100%;
+      max-width:720px;
+      transition: box-shadow .22s ease, transform .22s ease;
+    }
+    .release:hover{ transform: translateY(-6px); box-shadow: 0 28px 60px rgba(0,0,0,0.34) }
+
+    .art{
+      width:104px; height:104px; border-radius:12px;
+      background: linear-gradient(135deg,var(--neon-a),var(--neon-b));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; color:rgba(255,255,255,0.95);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      flex-shrink:0;
+      font-size:28px;
+    }
+    .meta{text-align:left}
+    .meta h3{margin:0;font-size:18px}
+    .meta p{margin:6px 0 0 0;color:var(--muted);font-size:14px}
+
+    /* contact / footer */
+    .contact{ margin-top:12px; color:var(--muted); font-size:14px }
+    footer{ margin-top:14px; color:var(--muted); font-size:13px }
+
+    /* theme toggle */
+    .theme {
+      position:fixed;
+      right:18px; top:18px;
+      z-index:5;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      background:var(--glass);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: var(--accentGlow);
+      backdrop-filter: blur(6px);
+      color:var(--text);
+      font-weight:700;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:720px){
+      .logo{font-size:40px; letter-spacing:6px}
+      .hero{padding:22px}
+      .art{width:84px;height:84px;font-size:22px}
+      .release{flex-direction:column;align-items:center;text-align:center}
+      .meta{text-align:center}
+    }
+
+    /* reduced motion respect */
+    @media (prefers-reduced-motion: reduce){
+      .logo, .bg::before, .bg::after, .link-btn, .release{ animation: none !important; transition: none !important }
+    }
+  </style>
+</head>
+<body>
+  <!-- animated background layers -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <!-- theme toggle -->
+  <button class="theme" id="themeBtn" aria-label="Tema değiştir">🌙 &nbsp; Tema</button>
+
+  <main class="wrap" role="main">
+    <section class="hero" aria-labelledby="artistName">
+      <h1 id="artistName" class="logo" aria-label="Lrows">LROWS</h1>
+      <div class="tag">Official Artist Page</div>
+
+      <nav class="links" aria-label="Müzik platformları">
+        <a class="link-btn" href="https://open.spotify.com/intl-tr/artist/1NfX2XchoIb9VqZPjMxoz9" target="_blank" rel="noopener noreferrer" title="Spotify">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/spotify.svg" alt="" aria-hidden="true">Spotify
+        </a>
+
+        <a class="link-btn" href="https://music.apple.com/tr/artist/lrows/1631553986" target="_blank" rel="noopener noreferrer" title="Apple Music">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/applemusic.svg" alt="" aria-hidden="true">Apple Music
+        </a>
+
+        <a class="link-btn" href="https://youtube.com/@lrowsxd" target="_blank" rel="noopener noreferrer" title="YouTube">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="" aria-hidden="true">YouTube
+        </a>
+      </nav>
+
+      <div class="release" aria-labelledby="latestTitle">
+        <div class="art" id="artPlace">L</div>
+        <div class="meta">
+          <h3 id="latestTitle">🎵 Latest Release</h3>
+          <p id="latestDesc">Coming soon... — şarkı adı, kapak ve dinleme linkleri eklenecek. Burayı istediğin zaman güncelleyebilirsin.</p>
+        </div>
+      </div>
+
+      <div class="contact">📩 <a href="mailto:lrows@hotmail.com" style="color:inherit; text-decoration:underline;">lrows@hotmail.com</a></div>
+    </section>
+
+    <footer>© <span id="y"></span> Lrows. All rights reserved.</footer>
+  </main>
+
+  <script>
+    // year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // theme handling (respects saved pref & system)
+    (function(){
+      const btn = document.getElementById('themeBtn');
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+      else if (!saved && !prefersDark) document.documentElement.setAttribute('data-theme','light');
+
+      const updateLabel = () => {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        btn.innerHTML = isLight ? '🌙 &nbsp; Tema' : '☀️ &nbsp; Tema';
+      };
+      updateLabel();
+
+      btn.addEventListener('click', () => {
+        if (document.documentElement.getAttribute('data-theme') === 'light') {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('theme','dark');
+        } else {
+          document.documentElement.setAttribute('data-theme','light');
+          localStorage.setItem('theme','light');
+        }
+        updateLabel();
+      });
+    })();
+
+    // small progressive enhancement: allow updating "Latest Release" from console or future UI
+    // Example: window.updateRelease({title:'Track', desc:'... ', artUrl:'https://...', link:'https://...'});
+    window.updateRelease = function(data){
+      if (!data) return;
+      const titleEl = document.getElementById('latestTitle');
+      const descEl = document.getElementById('latestDesc');
+      const artEl  = document.getElementById('artPlace');
+
+      if (data.title) titleEl.textContent = '🎵 ' + data.title;
+      if (data.desc) descEl.textContent = data.desc;
+      if (data.artUrl){
+        // replace art block with image
+        artEl.style.background = 'transparent';
+        artEl.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = data.artUrl;
+        img.alt = data.title || 'Artwork';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '10px';
+        artEl.appendChild(img);
+      }
+      if (data.link) {
+        // wrap title into anchor
+        titleEl.innerHTML = '<a href="'+data.link+'" target="_blank" rel="noopener noreferrer" style="color:inherit; text-decoration:underline;">' + titleEl.textContent + '</a>';
+      }
+    };
+
+    // Respect reduced motion
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('*').forEach(n => n.style.animation = 'none');
+      document.querySelector('.bg').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
